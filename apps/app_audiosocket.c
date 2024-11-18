@@ -207,6 +207,12 @@ static int audiosocket_run(struct ast_channel *chan, const char *id, int svc)
 					"channel %s\n", chanName);
 				return -1;
 			}
+			/* horrible hack */
+			if (f->src && strcmp(f->src, "AudioSocket_closed") == 0) {
+				ast_log(LOG_WARNING, "AudioSocket closed remotely on channel %s\n", chanName);
+				ast_frfree(f);
+				return 0;
+			}
 			if (ast_write(chan, f)) {
 				ast_log(LOG_WARNING, "Failed to forward frame to channel %s\n", chanName);
 				ast_frfree(f);
