@@ -257,7 +257,10 @@ struct ast_frame *ast_audiosocket_receive_frame(const int svc)
 	}
 	if (kind == 0x00) {
 		/* AudioSocket ended by remote */
-		return NULL;
+		/* horrible hack */
+		f.src = "AudioSocket_closed";
+		f.mallocd = 0;
+		return ast_frisolate(&f);
 	}
 	if (kind != 0x10) {
 		/* read but ignore non-audio message */
